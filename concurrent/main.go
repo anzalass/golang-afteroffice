@@ -23,14 +23,16 @@ var URLs = []string{
 }
 
 func main() {
-	defer fmt.Println("main thread end")
+	// defer punya internal stack
+	defer fmt.Println("main goroutine end") // close program
 	defer func() {
-		fmt.Println("defer")
+		//		fmt.Println("defer") // close resource
 	}()
-	fmt.Println("main thread start")
+	defer fmt.Println("ke 3") // close channel
+	fmt.Println("main go routuine start")
 
-	// basicGoroutine()
-	// basicChan()
+	basicGoroutine()
+	basicChan()
 
 	// fetchURL(URLs[0])
 
@@ -221,6 +223,7 @@ func fetchConcurrentlyWaitgroup() {
 	var results []string
 	// Collect results from the channel for each URL
 	wg.Wait()
+	close(ch)
 
 	for msg := range ch { // iterate len(URLs) times without assign any new variable.
 		results = append(results, msg)
